@@ -1,8 +1,8 @@
-// function 02 인수 전달 방법 - 값에 의한 전달.(call by value).
+// function 02 인수 전달 방법 - 참조에 의한 전달.(call by reference).
 # include <iostream>
 using namespace std;
 
-void Local(int); // 함수 원형 선언.
+void Local(int&); // 함수 원형 선언.
 
 int main(void)
 {
@@ -14,4 +14,4 @@ int main(void)
     return 0;
 }
 
-void Local(int num) { num += 10; }
+void Local(int& num) { num += 10; }
