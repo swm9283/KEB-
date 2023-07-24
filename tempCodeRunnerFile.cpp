@@ -1,0 +1,1 @@
+sizeof(arr9) / arr9[0]
