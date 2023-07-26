@@ -1,65 +1,56 @@
-// class 03 연산자 오버로딩 - operator function
-// 문법
-// operator오버로딩할연산자(매개변수목록.)
+// class 04 OOP 캡슐화 - friend
 # include <iostream>
 # include <string>
 using namespace std;
 
-class Position
+class Rect
 {
     private:
-      double x_;
-      double y_;
-    
+      double height_;
+      double width_;
+
     public:
-      Position(); // 기본 생성자 원형 선언
-      Position(double x, double y); // 생성자 원형 선언
-      ~Position(); // 소멸자 원형 선언.
-      void Display();
-    //   Position operator-(const Position &other); // - 연산자 함수 원형 선언
-      friend Position operator-(const Position &pos1, const Position &pos2); // - 연산자 함수.
+      Rect(); // 기본 constructor
+      Rect(double height, double width); // 생성자
+      void DisplaySize();
+      Rect operator*(double mul) const; // const keyword -> 상수 멤버함수 선언 : 상수 멤버함수란 자신이 호출하는 객체를 수정하지 않는 읽기 전용 함수.
+      friend Rect operator*(double mul, const Rect &origin); // 프렌드 함수.
 };
 
 int main(void)
 {
-      Position pos1 = Position(3.3, 12.5);
-      Position pos2(-14.4, 7.8);
-      Position pos3 = pos1 - pos2;
+    Rect origin_rect(10, 20);
+    // Rect changed_rect = origin_rect * 2;
+    Rect changed_rect = 3 * origin_rect;
 
-      pos3.Display();
-      cout << sizeof(pos3);
-      return 0;
+    changed_rect.DisplaySize();
+    return 0;
 }
 
-// 기본 생성자
-Position ::Position() { cout << "나는 기본 생성자입니다.";}
-
-// 생성자.
-Position :: Position(double x, double y)
+//기본 생성자
+Rect ::Rect(){};
+//생성자.
+Rect :: Rect(double height, double width)
 {
-      cout << "나는 생성자입니다." <<endl;
-      x_ = x;
-      y_ = y;
+    height_ = height;
+    width_ = width;
 }
 
-// 소멸자
-Position ::~Position(){};
-
-// Display 함수
- void Position :: Display()
+// DisplaySize 함수 선언
+void Rect :: DisplaySize()
 {
-    cout << this << " 객체의 "
-         << " x 좌표 : " << this->x_ << " y 좌표 : " << this->y_ << " 입니다."
-         << endl;
+    cout << " 높이 : " << this->height_ << " 넓이 : " << this->width_ << endl;
 }
 
-// - 연산자 오버로딩.
-// Position Position :: operator-(const Position& other)
-// {
-//     return Position((x_ + other.x_) / 2, (y_ + other.y_) / 2);
-// }
-// - 연산자 오버로딩 : 전역함수 선언.
-Position operator-(const Position& pos1, const Position& pos2)
+// Rect 멤버함수 - * 연산자 overload
+Rect Rect::operator*(double mul) const
 {
-    return Position((pos1.x_ + pos2.x_) / 2, (pos1.y_ + pos2.y_) / 2);
+    return Rect(height_ * mul, width_ * mul);
+}
+
+// 전역 함수 - * 연산자 overload
+//프렌드 함수.
+Rect operator*(double mul, const Rect& origin)
+{
+    return Rect(mul * origin.height_, mul * origin.width_);
 }
