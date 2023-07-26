@@ -1,53 +1,65 @@
-// class 02 복사생성자(copy constructor)
+// class 03 연산자 오버로딩 - operator function
+// 문법
+// operator오버로딩할연산자(매개변수목록.)
 # include <iostream>
-# include<string>
+# include <string>
 using namespace std;
 
-class Book
+class Position
 {
     private:
-      int current_page_;
-      void set_percent();
-
-    public:
-    Book(const string &title, int total_page);
-    Book(const Book &); //  복사 생성자의 원형 정의.
-    string title_;
-    int total_page_;
-    double percent_;
-    void Move(int page);
-    void Open();
-    void Read();
+      double x_;
+      double y_;
     
+    public:
+      Position(); // 기본 생성자 원형 선언
+      Position(double x, double y); // 생성자 원형 선언
+      ~Position(); // 소멸자 원형 선언.
+      void Display();
+    //   Position operator-(const Position &other); // - 연산자 함수 원형 선언
+      friend Position operator-(const Position &pos1, const Position &pos2); // - 연산자 함수.
 };
 
 int main(void)
 {
-	Book web_book("HTML과 CSS", 350);
-	Book html_book(web_book); // 복사 생성자를 사용해서, web_book를 참조해서 html_book을 초기화.
-	
-	cout << "첫 번째 책의 제목은 " << web_book.title_ << "이고, 총 페이지는 " << web_book.total_page_ << "장입니다." << endl;
-	cout << "두 번째 책의 제목은 " << html_book.title_ << "이고, 총 페이지는 " << html_book.total_page_ << "장입니다.";
-	return 0;
+      Position pos1 = Position(3.3, 12.5);
+      Position pos2(-14.4, 7.8);
+      Position pos3 = pos1 - pos2;
+
+      pos3.Display();
+      cout << sizeof(pos3);
+      return 0;
 }
 
-Book::Book(const string& title, int total_page)
+// 기본 생성자
+Position ::Position() { cout << "나는 기본 생성자입니다.";}
+
+// 생성자.
+Position :: Position(double x, double y)
 {
-	title_ = title;
-	total_page_ = total_page;
-	current_page_ = 0;
-	set_percent();
+      cout << "나는 생성자입니다." <<endl;
+      x_ = x;
+      y_ = y;
 }
 
-Book::Book(const Book& origin)	// 복사 생성자의 선언 
+// 소멸자
+Position ::~Position(){};
+
+// Display 함수
+ void Position :: Display()
 {
-	title_ = origin.title_;
-	total_page_ = origin.total_page_;
-	current_page_ = origin.current_page_;
-	percent_ = origin.percent_;
+    cout << this << " 객체의 "
+         << " x 좌표 : " << this->x_ << " y 좌표 : " << this->y_ << " 입니다."
+         << endl;
 }
 
-void Book::set_percent()
+// - 연산자 오버로딩.
+// Position Position :: operator-(const Position& other)
+// {
+//     return Position((x_ + other.x_) / 2, (y_ + other.y_) / 2);
+// }
+// - 연산자 오버로딩 : 전역함수 선언.
+Position operator-(const Position& pos1, const Position& pos2)
 {
-	percent_ = (double) current_page_ / total_page_ * 100;
+    return Position((pos1.x_ + pos2.x_) / 2, (pos1.y_ + pos2.y_) / 2);
 }
