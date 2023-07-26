@@ -1,28 +1,35 @@
-// class 08 OOP 다형성 - 가상함수
+// class 09 OOP 다형성 - 추상클래스
 # include <iostream>
+# include <string>
 using namespace std;
 
-class A
+class Animal
 {
     public:
-      virtual void Print() { cout << "A class의 Print 함수 입니다." << endl; };
+      virtual ~Animal(){}; // 가상 소멸자의 선언.
+      virtual void Cry() = 0; // pure virtual funciton 선언.
 };
 
-class B : public A
+class Dog : public Animal
 {
-    public :
-      virtual void Print() { cout << "B class의 Print 함수 입니다." << endl; };
+    public:
+      virtual void Cry()
+      {
+        cout << "멍멍!!" << endl;
+      }
 };
 
-int main(void)
+class Cat : public Animal
 {
-    A* ptr;
-    A obj_A;
-    B obj_B;
-    ptr = &obj_A;
-    ptr->Print();
+    public:
+      virtual void Cry() { cout << "야용 야용!!!!" << endl; }
+};
 
-    ptr = &obj_B;
-    ptr->Print();
+int main (void)
+{
+    Dog dog;
+    Cat cat;
+    dog.Cry();
+    cat.Cry();
     return 0;
 }
