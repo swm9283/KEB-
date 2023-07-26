@@ -1,56 +1,70 @@
-// class 04 OOP 캡슐화 - friend
+// class 05 OOP 캡슐화 - 다양한 프렌드
 # include <iostream>
 # include <string>
+# include <cmath>
 using namespace std;
+
+class Rect; // 전방선언(forward declaration. - circular reference를 피하기 위해!
+
+// friend 멤버 함수를 선언할 때에는 각 클래스의 선언 위치도 신경써야한다.
+
+
+class Display
+{
+    public:
+      void ShowSize(const Rect& target);
+      void ShowDiagnol(const Rect& target);
+};
+
 
 class Rect
 {
     private:
       double height_;
       double width_;
-
+    
     public:
-      Rect(); // 기본 constructor
       Rect(double height, double width); // 생성자
-      void DisplaySize();
-      Rect operator*(double mul) const; // const keyword -> 상수 멤버함수 선언 : 상수 멤버함수란 자신이 호출하는 객체를 수정하지 않는 읽기 전용 함수.
-      friend Rect operator*(double mul, const Rect &origin); // 프렌드 함수.
+      void height() const;
+      void width() const;
+    //   friend class Display; // 프렌드 클래스 선언. -> data hiding 및 encapsulation에 불리
+      friend void Display::ShowDiagnol(const Rect &target); // 프렌드 멤버 함수 선언.
 };
 
 int main(void)
 {
-    Rect origin_rect(10, 20);
-    // Rect changed_rect = origin_rect * 2;
-    Rect changed_rect = 3 * origin_rect;
+    Rect rect01(10,20);
 
-    changed_rect.DisplaySize();
+    Display rect_display;
+    rect_display.ShowSize(rect01);
+    rect_display.ShowDiagnol(rect01);
+
     return 0;
 }
-
-//기본 생성자
-Rect ::Rect(){};
-//생성자.
-Rect :: Rect(double height, double width)
-{
+Rect ::Rect(double height, double width) {
     height_ = height;
     width_ = width;
 }
 
-// DisplaySize 함수 선언
-void Rect :: DisplaySize()
+void Rect :: height() const
 {
-    cout << " 높이 : " << this->height_ << " 넓이 : " << this->width_ << endl;
+    cout << "이 사각형의 높이 : " << this->height_ << endl;
 }
 
-// Rect 멤버함수 - * 연산자 overload
-Rect Rect::operator*(double mul) const
+void Rect :: width() const
 {
-    return Rect(height_ * mul, width_ * mul);
+    cout << "이 사각형의 넓이 : " << this->width_ << endl;
 }
 
-// 전역 함수 - * 연산자 overload
-//프렌드 함수.
-Rect operator*(double mul, const Rect& origin)
+void Display :: ShowSize(const Rect& target)
 {
-    return Rect(mul * origin.height_, mul * origin.width_);
+    target.height();
+    target.width();
+}
+
+void Display :: ShowDiagnol(const Rect& target)
+{
+    double diagnol;
+    diagnol = sqrt(pow(target.height_, 2) + pow(target.width_, 2));
+    cout << "이 사각형의 대각선의 길이 : " << diagnol << endl;
 }
