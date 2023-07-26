@@ -1,46 +1,56 @@
-// class 06 OOP 캡슐화 - 정적멤버와 상수멤버.
-# include <iostream>
-# include <string>
+// class 07 OOP 상속성 - 파생 클래스.
+#include <iostream>
+#include <string>
 using namespace std;
 
 class Person
 {
-    private:
-      string name_;
-      int age_;
-    public:
-      static int person_count_;   // 정적 멤버 변수의 선언
-      static int person_count();  // 정적 멤버 함수의 선언.
-      Person(string name, int age);  // 생성자
-      ~Person() { person_count_--; } // 소멸자.
-      void ShowPersonInfo();
+private:
+	string name_;
+	int age_;
+public:
+	Person(const string& name, int age);	// 기초 클래스 생성자의 선언 
+	void ShowPersonInfo();
 };
 
-int Person ::person_count_ = 0; // 정적 멤버 변수의 정의 및 초기화.
+class Student : public Person
+{
+private:
+	int student_id_;
+public:
+	Student(int sid, const string& name, int age);	// 파생 클래스 생성자의 선언
+        void ShowPersonInfo(); // 파생 클래스에서 상속받은 멤버 함수의 재정의.(override)
+};
 
 int main(void)
 {
-      Person song("우민", 24);
-      song.ShowPersonInfo();
-      Person jang("서진", 21);
-      jang.ShowPersonInfo();
-      cout << "현재 우민이와 서진이 가족 구성원은 " << Person ::person_count()
-           << "명 입니다." << endl;
+        Student song(12180000, "우민", 24);
+        song.ShowPersonInfo();
+        Student jang(1222, "서진", 21);
+        jang.ShowPersonInfo();
+        jang.Person::ShowPersonInfo(); // 범위 지정 연산자를 통해 기초클래스 원래 멤버함수 호출 가능.
 
-      return 0;
+        return 0;
 }
 
-Person :: Person(string name, int age)
+Person::Person(const string& name, int age)	// 기초 클래스 생성자의 정의 
 {
-    name_ = name;
-    age_ = age;
-    cout << ++person_count_ << " 번째 사람이 생성되었습니다." << endl;
+	name_ = name;
+	age_ = age;
 }
 
-void Person :: ShowPersonInfo()
+void Person::ShowPersonInfo()
 {
-    cout << "이름은 " << this->name_ << "이고"
-         << " 나이는 " << this->age_ << "입니다." << endl;
+	cout << this->name_ << "의 나이는 " << this->age_ << "살입니다." << endl;
 }
 
-int Person ::person_count() { return person_count_; }
+Student::Student(int sid, const string& name, int age) : Person(name, age)	// 파생 클래스 생성자의 정의 
+{
+	student_id_ = sid;
+}
+
+void Student::ShowPersonInfo()
+{
+        cout << "이 학생은 인하대학교 학생이며 학번은 " << this->student_id_
+             << " 입니다." << endl;
+}
