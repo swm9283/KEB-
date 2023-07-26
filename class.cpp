@@ -1,70 +1,46 @@
-// class 05 OOP 캡슐화 - 다양한 프렌드
+// class 06 OOP 캡슐화 - 정적멤버와 상수멤버.
 # include <iostream>
 # include <string>
-# include <cmath>
 using namespace std;
 
-class Rect; // 전방선언(forward declaration. - circular reference를 피하기 위해!
-
-// friend 멤버 함수를 선언할 때에는 각 클래스의 선언 위치도 신경써야한다.
-
-
-class Display
-{
-    public:
-      void ShowSize(const Rect& target);
-      void ShowDiagnol(const Rect& target);
-};
-
-
-class Rect
+class Person
 {
     private:
-      double height_;
-      double width_;
-    
+      string name_;
+      int age_;
     public:
-      Rect(double height, double width); // 생성자
-      void height() const;
-      void width() const;
-    //   friend class Display; // 프렌드 클래스 선언. -> data hiding 및 encapsulation에 불리
-      friend void Display::ShowDiagnol(const Rect &target); // 프렌드 멤버 함수 선언.
+      static int person_count_;   // 정적 멤버 변수의 선언
+      static int person_count();  // 정적 멤버 함수의 선언.
+      Person(string name, int age);  // 생성자
+      ~Person() { person_count_--; } // 소멸자.
+      void ShowPersonInfo();
 };
+
+int Person ::person_count_ = 0; // 정적 멤버 변수의 정의 및 초기화.
 
 int main(void)
 {
-    Rect rect01(10,20);
+      Person song("우민", 24);
+      song.ShowPersonInfo();
+      Person jang("서진", 21);
+      jang.ShowPersonInfo();
+      cout << "현재 우민이와 서진이 가족 구성원은 " << Person ::person_count()
+           << "명 입니다." << endl;
 
-    Display rect_display;
-    rect_display.ShowSize(rect01);
-    rect_display.ShowDiagnol(rect01);
-
-    return 0;
-}
-Rect ::Rect(double height, double width) {
-    height_ = height;
-    width_ = width;
+      return 0;
 }
 
-void Rect :: height() const
+Person :: Person(string name, int age)
 {
-    cout << "이 사각형의 높이 : " << this->height_ << endl;
+    name_ = name;
+    age_ = age;
+    cout << ++person_count_ << " 번째 사람이 생성되었습니다." << endl;
 }
 
-void Rect :: width() const
+void Person :: ShowPersonInfo()
 {
-    cout << "이 사각형의 넓이 : " << this->width_ << endl;
+    cout << "이름은 " << this->name_ << "이고"
+         << " 나이는 " << this->age_ << "입니다." << endl;
 }
 
-void Display :: ShowSize(const Rect& target)
-{
-    target.height();
-    target.width();
-}
-
-void Display :: ShowDiagnol(const Rect& target)
-{
-    double diagnol;
-    diagnol = sqrt(pow(target.height_, 2) + pow(target.width_, 2));
-    cout << "이 사각형의 대각선의 길이 : " << diagnol << endl;
-}
+int Person ::person_count() { return person_count_; }
